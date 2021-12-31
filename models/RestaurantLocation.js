@@ -1,0 +1,32 @@
+/**
+ * @description Represents a restaurant location.
+ */
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
+
+const Image = require('./Helpers/Image');
+
+const RestaurantLocationSchema = new Schema({
+    locationName: {required: true, minlength: 5, trim: true, type: String},
+    address: {
+        address1: {minlength: 5, trim: true, type: String},
+        address2: {trim: true, type: String},
+        geo: {
+            maxlength: 2,
+            type: [Number]
+        }
+    },
+    seatingCapacity: {min: 0, type: Number},
+    openForBusiness: {default: true, type: Boolean},
+    servicesAvailable: {type: [String]},
+    contactDetails: {
+        primaryPhone: {trim: true, type: String},
+        primaryEmail: {trim: true, type: String},
+        website: {trim: true, type: String}
+    },
+    images: {
+        type: [Image]
+    }
+});
+
+module.exports = mongoose.model('RestaurantLocation', RestaurantLocationSchema);
