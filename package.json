@@ -1,0 +1,20 @@
+{
+  "name": "restaurant-api",
+  "version": "1.0.0",
+  "description": "The best restaurant api ever",
+  "main": "restaurant-core.js",
+  "scripts": {
+    "dev": "NODE_ENVIRONMENT=development node restaurant-core.js",
+    "dev-watch": "NODE_ENVIRONEMNT=development nodemon restaurant-core.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sai",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mongoose": "^6.1.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
