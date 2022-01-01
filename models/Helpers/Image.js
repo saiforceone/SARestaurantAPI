@@ -1,7 +1,7 @@
 /**
  * @description Defines a helper schema for an image. This will not have its own collection
  */
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
 const ImageSchema = new Schema({
@@ -10,4 +10,4 @@ const ImageSchema = new Schema({
     url: {required: true, trim: true, type: String},
 });
 
-module.exports = ImageSchema;
+export default ImageSchema;

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "The best restaurant api ever",
   "main": "restaurant-core.js",
+  "type": "module",
   "scripts": {
     "dev": "NODE_ENVIRONMENT=development node restaurant-core.js",
     "dev-watch": "NODE_ENVIRONEMNT=development nodemon restaurant-core.js",

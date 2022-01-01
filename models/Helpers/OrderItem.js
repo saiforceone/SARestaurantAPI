@@ -1,7 +1,7 @@
 /**
  * @description Defines a helper order item schema
  */
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
 const OrderItemSchema = new Schema({
@@ -10,4 +10,4 @@ const OrderItemSchema = new Schema({
     itemName: {required: true, trim: true, type: String},
 });
 
-module.exports = OrderItemSchema;
+export default OrderItemSchema;

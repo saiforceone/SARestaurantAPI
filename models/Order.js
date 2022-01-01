@@ -1,10 +1,10 @@
 /**
  * @description Defines an Order model
  */
-const mongoose = require('mongoose');
+import mongoose, { model } from 'mongoose';
 const {Schema} = mongoose;
-const OrderItem = require('./Helpers/OrderItem');
-const {ORDER_STATUSES} = require('./constants');
+import OrderItem from './Helpers/OrderItem';
+import { ORDER_STATUSES } from './constants';
 
 const OrderSchema = new Schema({
     relatedLocation: {ref: 'RestaurantLocation', required: true, type: Schema.Types.ObjectId},
@@ -19,4 +19,4 @@ const OrderSchema = new Schema({
     orderStatus: {default: 'received', enum: ORDER_STATUSES, required: true, trim: true, type: String},
 });
 
-module.exports = mongoose.model('Order', OrderSchema);
+export default model('Order', OrderSchema);

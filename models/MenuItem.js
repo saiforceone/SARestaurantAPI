@@ -2,7 +2,7 @@
  * @description This represents a menu item
  */
 
-const mongoose = require('mongoose');
+import mongoose, { model } from 'mongoose';
 const {Schema} = mongoose;
 
 const MenuItemSchema = new Schema({
@@ -14,4 +14,4 @@ const MenuItemSchema = new Schema({
     availableLocations: {ref: 'RestaurantLocation', type: Schema.Types.ObjectId},
 });
 
-module.exports = mongoose.model('MenuItem', MenuItemSchema);
+export default model('MenuItem', MenuItemSchema);
