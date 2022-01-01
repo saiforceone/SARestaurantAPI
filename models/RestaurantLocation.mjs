@@ -4,7 +4,7 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
-import Image from './Helpers/Image';
+import Image from './Helpers/Image.mjs';
 
 const RestaurantLocationSchema = new Schema({
     locationName: {required: true, minlength: 5, trim: true, type: String},

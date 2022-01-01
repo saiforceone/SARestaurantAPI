@@ -18,6 +18,7 @@ app.listen(config.serverPort, async () => {
     try {
         await mongoose.connect(config.mongoURI);
         console.log(`Connected to database: ${config.mongoURI}`);
+        // todo: remove test code
         const menuItemController = new MenuItemController();
 
         // const itemData = {
