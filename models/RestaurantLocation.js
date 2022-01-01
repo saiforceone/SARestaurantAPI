@@ -1,10 +1,10 @@
 /**
  * @description Represents a restaurant location.
  */
-const mongoose = require('mongoose');
+import mongoose, { model } from 'mongoose';
 const {Schema} = mongoose;
 
-const Image = require('./Helpers/Image');
+import Image from './Helpers/Image';
 
 const RestaurantLocationSchema = new Schema({
     locationName: {required: true, minlength: 5, trim: true, type: String},
@@ -29,4 +29,4 @@ const RestaurantLocationSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('RestaurantLocation', RestaurantLocationSchema);
+export default model('RestaurantLocation', RestaurantLocationSchema);
