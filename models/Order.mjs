@@ -1,9 +1,9 @@
 /**
  * @description Defines an Order model
  */
-import mongoose, { model } from 'mongoose';
+import mongoose from 'mongoose';
 const {Schema} = mongoose;
-import OrderItem from './Helpers/OrderItem';
+import OrderItem from './Helpers/OrderItem.mjs';
 import { ORDER_STATUSES } from './constants';
 
 const OrderSchema = new Schema({
@@ -19,4 +19,4 @@ const OrderSchema = new Schema({
     orderStatus: {default: 'received', enum: ORDER_STATUSES, required: true, trim: true, type: String},
 });
 
-export default model('Order', OrderSchema);
+export default mongoose.model('Order', OrderSchema);

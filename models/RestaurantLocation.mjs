@@ -1,7 +1,7 @@
 /**
  * @description Represents a restaurant location.
  */
-import mongoose, { model } from 'mongoose';
+import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
 import Image from './Helpers/Image';
@@ -29,4 +29,4 @@ const RestaurantLocationSchema = new Schema({
     }
 });
 
-export default model('RestaurantLocation', RestaurantLocationSchema);
+export default mongoose.model('RestaurantLocation', RestaurantLocationSchema);

@@ -9,6 +9,7 @@ class BaseController {
    */
   constructor(model) {
     this.model = model;
+    console.log(`${this.constructor.name}: controller initialized`)
   }
 
   // Helpers

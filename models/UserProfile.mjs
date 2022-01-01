@@ -1,7 +1,7 @@
 /**
  * @description Defines a User profile model
  */
-import mongoose, { model } from 'mongoose';
+import mongoose from 'mongoose';
 const {Schema} = mongoose;
 
 const UserProfileSchema = new Schema({
@@ -10,4 +10,4 @@ const UserProfileSchema = new Schema({
     lastLogin: {type: Date}
 });
 
-export default model('UserProfile', UserProfileSchema);
+export default mongoose.model('UserProfile', UserProfileSchema);
