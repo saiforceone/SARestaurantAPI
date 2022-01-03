@@ -34,11 +34,12 @@ class BaseController {
 
   /**
    * @method create
-   * @param {*} data 
+   * @param {Object} data 
+   * @param {String} id - override mongo's default id
    * @returns Object | undefined
    * @description base functionality to create a resource
    */
-  async create(data) {
+  async create(data, id = undefined) {
     try {
       const modelData = {};
 
@@ -61,6 +62,8 @@ class BaseController {
         }
       });
 
+      if (id) modelData['_id'] = id;
+
       return await this.model.create(modelData);
     } catch (e) {
       console.log(`create error: ${e.toString()}`);
@@ -78,7 +81,7 @@ class BaseController {
    */
   async getItemById(resourceId) {
     try {
-      return await this.model.findById(resourceId);
+      return await this.model.findById(resourceId).exec();
     } catch (e) {
       console.log(`getItemById error: ${e.toString()}`);
       return undefined;
@@ -126,11 +129,11 @@ class BaseController {
    * @method update
    * @param {String} resourceId 
    * @param {Object} data 
-   * @description Updates a resource given a resource id and data object
+   * @description Updates a resource given a resource id and a data object and returns the result of the update, not the updated document
    */
   async update(resourceId, data) {
     try {
-      return await this.model.update(resourceId, data);
+      return await this.model.updateOne({_id: resourceId}, data);
     } catch (e) {
       console.log(`update error: ${e.toString()}`);
       return;
@@ -147,7 +150,7 @@ class BaseController {
    */
   async remove(resourceId) {
     try {
-      await this.model.delete({_id: resourceId});
+      await this.model.deleteOne({_id: resourceId});
       return true;
     } catch (e) {
       console.log(`remove error: ${e.toString()}`);
