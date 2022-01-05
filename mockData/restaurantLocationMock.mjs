@@ -14,7 +14,13 @@ export default [
         primaryEmail: 'restaurant.one@superawesomerestaurants.net',
         website: 'https://superawesomerestaurants.net/restaurant-one'
       },
-      images: ['https://unsplash.com/photos/0uAVsDcyD0M'],
+      images: [
+        {
+          caption: 'Picture One',
+          description: '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+          url: 'https://unsplash.com/photos/0uAVsDcyD0M',
+        },
+      ],
   },
   {
     locationName: 'Restaurant 404',
@@ -31,6 +37,12 @@ export default [
         primaryEmail: 'restaurant.404@superawesomerestaurants.net',
         website: 'https://superawesomerestaurants.net/restaurant-404'
       },
-      images: ['https://unsplash.com/photos/0uAVsDcyD0M']
+      images: [
+        {
+          caption: 'Picture One',
+          description: '"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
+          url: 'https://unsplash.com/photos/0uAVsDcyD0M',
+        },
+      ]
   },
 ]

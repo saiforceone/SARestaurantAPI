@@ -4,13 +4,13 @@
 import mongoose from 'mongoose';
 const {Schema} = mongoose;
 import OrderItem from './Helpers/OrderItem.mjs';
-import { ORDER_STATUSES } from './constants';
+import { ORDER_STATUSES } from './constants/index.mjs';
 
 const OrderSchema = new Schema({
     relatedLocation: {ref: 'RestaurantLocation', required: true, type: Schema.Types.ObjectId},
     relatedUser: {ref: 'UserProfile', required: true, type: Schema.Types.ObjectId},
     orderTotal: {default: 0, type: Number},
-    orderDate: {default: Date.now, required: true, type: Schema.Types.ObjectId},
+    orderDate: {default: Date.now, required: true, type: Date},
     orderItems: {
         type: [OrderItem]
     },

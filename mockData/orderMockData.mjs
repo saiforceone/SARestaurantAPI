@@ -1,11 +1,11 @@
-export default [
+export default ({relatedLocation, relatedUser, itemRef, itemRef2}) => [
   {
-    relatedLocation: 'loc_id1',
-    relatedUser: 'user_id1',
+    relatedLocation,
+    relatedUser,
     orderTotal: 4.50,
     orderItems: [
       {
-        itemRef: 'menu_item_1',
+        itemRef,
         itemCost: 4.50,
         itemName: 'Item One',
       }
@@ -15,17 +15,17 @@ export default [
     orderStatus: 'received',
   },
   {
-    relatedLocation: 'loc_id1',
-    relatedUser: 'user_id1',
+    relatedLocation,
+    relatedUser,
     orderTotal: 8.75,
     orderItems: [
       {
-        itemRef: 'menu_item_1',
+        itemRef,
         itemCost: 4.50,
         itemName: 'Item One',
       },
       {
-        itemRef: 'menu_item_2',
+        itemRef: itemRef2,
         itemCost: 4.25,
         itemName: 'Item Two',
       }
