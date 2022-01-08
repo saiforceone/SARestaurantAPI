@@ -1,7 +1,8 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import config from './config/index.mjs';
 
+import './auth/auth.mjs';
+import config from './config/index.mjs';
 import routes from './routes/index.mjs';
 
 const app = express();

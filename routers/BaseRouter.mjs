@@ -52,7 +52,7 @@ class BaseRouter {
    * @description Retrieves a single resource based on the id given
    */
   getResource(middleware = []) {
-    return [async (req, res) => {
+    return [...middleware, async (req, res) => {
       const response = this.constructResponse();
       try {
         const resourceId = req.params.id;
@@ -80,7 +80,7 @@ class BaseRouter {
    * @description Retrieves a list of resources based on query params
    */
   getResources(middleware = []) {
-    return [async (req, res) => {
+    return [...middleware, async (req, res) => {
       const response = this.constructResponse();
       try {
         let page = req.query.page ? parseInt(req.query.page) : 1;

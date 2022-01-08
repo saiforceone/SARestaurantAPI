@@ -11,6 +11,11 @@ class UserProfileController extends BaseController {
     super()
     this.model = UserProfile;
   }
+
+  async remove(resourceId) {
+    const result = await this.update(resourceId, {isEnabled: false});
+    return result['modifiedCount'] > 0;
+  }
 }
 
 export default UserProfileController;
