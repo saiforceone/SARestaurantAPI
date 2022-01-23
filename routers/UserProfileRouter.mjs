@@ -2,10 +2,12 @@ import passport from 'passport';
 import jwt from 'jsonwebtoken';
 const {sign: jwtSign, verify: jwtVerify} = jwt;
 
+import config from '../config/index.mjs';
 import BaseRouter from './BaseRouter.mjs';
 import UserProfileController from '../controllers/UserProfileController.mjs';
 import checkActive from '../middleware/checkActive.mjs';
 import checkAdmin from '../middleware/checkAdmin.mjs';
+import checkJWT from '../middleware/checkJWT.mjs';
 
 const standardMiddlewares = [passport.authenticate('jwt', {session: false}), checkActive, checkAdmin];
 
@@ -32,6 +34,7 @@ class UserProfileRouter extends BaseRouter {
         async (err, user, info) => {
           try {
             if (err || !user) {
+              console.log('authenticateUserLocal erorr: ', err);
               const error = new Error('An error occurred.');
   
               return next(error);
@@ -44,7 +47,7 @@ class UserProfileRouter extends BaseRouter {
                 if (error) return next(error);
   
                 const body = { _id: user._id, username: user.username };
-                const token = jwtSign({ user: body }, 'TOP_SECRET');
+                const token = jwtSign({ user: body }, config.secretKey);
   
                 return res.json({ token });
               }
@@ -67,6 +70,9 @@ class UserProfileRouter extends BaseRouter {
       const response = this.constructResponse();
       try {
         console.log('signup user with details: ', req.user);
+        const body = { _id: req.user._id, username: req.user.username };
+        const token = jwtSign({ user: body }, config.secretKey);
+        response.data = {token};
         response.httpCode = 201;
         response.success = true;
         return res.status(response.httpCode).json(response);
@@ -84,10 +90,10 @@ class UserProfileRouter extends BaseRouter {
    * @returns [function]
    */
   currentUser() {
-    return [passport.authenticate('jwt', {session: false}), async (req, res) => {
+    return [checkJWT, async (req, res) => {
       const response = this.constructResponse();
       try {
-        response.data = {message: 'super secret stuff for your eyes only'};
+        response.data = {profile: req.user};
         response.httpCode = 200;
         response.success = true;
         return res.status(response.httpCode).json(response);
@@ -100,15 +106,16 @@ class UserProfileRouter extends BaseRouter {
   }
 
   getRoutes() {
+
+    this.router.route(`${this.basePath}/me`)
+      .get(this.currentUser());
+
     this.router.route(`${this.basePath}`)
       .get(this.getResources(standardMiddlewares));
 
     this.router.route(`${this.basePath}/:id`)
       .get(this.getResource(standardMiddlewares))
       .delete(this.deleteResource(standardMiddlewares));
-
-    this.router.route(`${this.basePath}/me`)
-      .get(this.currentUser());
 
     this.router.route('/auth-local/register')
       .post(this.registerUserLocal());

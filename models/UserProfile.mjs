@@ -7,7 +7,7 @@ const {Schema} = mongoose;
 
 const UserProfileSchema = new Schema({
   username: {required: true, trim: true, type: String, unique: true},
-  password: {required: true, select: false, type: String},
+  password: {required: true, type: String},
   serviceName: {default: 'local', required: true, trim: true, type: String},
   lastLogin: {type: Date},
   userRoles: {

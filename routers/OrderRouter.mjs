@@ -8,6 +8,7 @@ import UserProfile from '../models/UserProfile.mjs';
 
 import checkActive from '../middleware/checkActive.mjs';
 import checkAdmin from '../middleware/checkAdmin.mjs';
+import checkJWT from '../middleware/checkJWT.mjs';
 
 const standardMiddlewares = [passport.authenticate('jwt', {session: false}), checkActive, checkAdmin];
 
@@ -21,8 +22,31 @@ class OrderRouter extends BaseRouter {
     this.controller = new OrderController();
   }
 
+  getOrdersForCurrentUser() {
+    return [checkJWT, checkActive, async (req, res) => {
+      const response = this.constructResponse();
+      try {
+        const orders = await this.controller.getItems({
+          relatedUser: mongoose.Types.ObjectId(req.user._id),
+          ignorePagination: true,
+        });
+
+        console.log('orders?: ', orders);
+
+        response.httpCode = 200;
+        response.data = orders;
+        response.success = true;
+        return res.json(response);
+      } catch (e) {
+        response.error = e.toString();
+        response.httpCode = 500;
+        return res.status(response.httpCode).json(response);
+      }
+    }];
+  }
+
   createResource(middleware = []) {
-    return [...middleware, async (req, res) => {
+    return [checkJWT, checkActive, async (req, res) => {
       const response = this.constructResponse();
 
       try {
@@ -74,10 +98,14 @@ class OrderRouter extends BaseRouter {
         response.httpCode = 500;
         return res.status(response.httpCode).json(response);
       }
-    }]
+    }];
   }
 
   getRoutes() {
+
+    this.router.route(`${this.basePath}/current-user`)
+      .get(this.getOrdersForCurrentUser());
+
     this.router.route(`${this.basePath}`)
       .post(this.createResource(standardMiddlewares));
 

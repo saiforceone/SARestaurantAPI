@@ -5,10 +5,10 @@
   "main": "restaurant-core.js",
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENVIRONMENT=development node restaurant-core.js",
-    "dev-watch": "NODE_ENVIRONEMNT=development nodemon restaurant-core.js",
+    "dev": "NODE_ENV=development node restaurant-core.js",
+    "dev-watch": "NODE_ENV=development nodemon restaurant-core.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "test-controllers": "NODE_ENVIRONMENT=testing mocha"
+    "test-controllers": "NODE_ENV=testing mocha"
   },
   "author": "Sai",
   "license": "ISC",
@@ -24,6 +24,7 @@
   "devDependencies": {
     "chai": "^4.3.4",
     "mocha": "^9.1.3",
+    "morgan": "^1.10.0",
     "nodemon": "^2.0.15"
   }
 }
