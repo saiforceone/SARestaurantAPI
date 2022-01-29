@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
@@ -8,6 +9,7 @@ import routes from './routes/index.mjs';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 morgan.token('type', function (req, res) { return req.headers['content-type'] });
 morgan.token('headers', function (req, res) { return req.headers['authorization'] });
 app.use(morgan(':headers'));
