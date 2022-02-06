@@ -10,7 +10,35 @@ import checkActive from '../middleware/checkActive.mjs';
 import checkAdmin from '../middleware/checkAdmin.mjs';
 import checkJWT from '../middleware/checkJWT.mjs';
 
-const standardMiddlewares = [passport.authenticate('jwt', {session: false}), checkActive, checkAdmin];
+const standardMiddlewares = [checkJWT, checkActive, checkAdmin];
+
+/**
+ * @function getUserById
+ * @param {*} userId
+ * @returns {*}
+ * @description Helper function to retrieve a user profile
+ */
+const getUserById = async ({userId}) => {
+  try {
+    return await UserProfile.findById(userId);
+  } catch (e) {
+    return undefined
+  }
+};
+
+/**
+ * @function getLocationById
+ * @param {*} locationId
+ * @returns {*}
+ * @description Helper function to retrieve a restaurant location
+ */
+const getLocationById = async ({locationId}) => {
+  try {
+    return await RestaurantLocation.findById(locationId);
+  } catch (e) {
+    return undefined;
+  }
+};
 
 /**
  * @class OrderRouter
@@ -20,6 +48,8 @@ class OrderRouter extends BaseRouter {
   constructor(basePath = '/orders') {
     super(basePath);
     this.controller = new OrderController();
+    this.cachedLocations = {};
+    this.cachedUsers = {};
   }
 
   getOrdersForCurrentUser() {
@@ -43,6 +73,63 @@ class OrderRouter extends BaseRouter {
         return res.status(response.httpCode).json(response);
       }
     }];
+  }
+
+  getResources(middleware) {
+    return [...middleware, async (req, res) => {
+      const response = this.constructResponse();
+
+      try {
+        let query = req.query.filter ? String(req.query.filter).trim() : {};
+        const queryResults = await this.controller.getItems(query);
+
+        let processedResults = [];
+        for (const result of queryResults) {
+          // Related Users
+          let relatedUser = this.cachedUsers[result.relatedUser];
+          if (!relatedUser) {
+            const fetchedUser = await getUserById({
+              userId: mongoose.Types.ObjectId(result.relatedUser)
+            });
+            if (fetchedUser) {
+              this.cachedUsers[String(fetchedUser._id)] = fetchedUser;
+              relatedUser = fetchedUser;
+            }
+          }
+
+          // Related Locations
+          let relatedLocation = this.cachedLocations[result.relatedLocation];
+          if (!relatedLocation) {
+            const fetchedLocation = await getLocationById({
+              locationId: mongoose.Types.ObjectId(result.relatedLocation)
+            });
+            if (fetchedLocation) {
+              this.cachedLocations[String(fetchedLocation._id)] = fetchedLocation;
+              relatedLocation = fetchedLocation;
+            }
+          }
+          
+          const processedOrderObj = Object.assign(
+            {}, result.toJSON(),
+            {relatedUser: relatedUser.toJSON()},
+            {relatedLocation: relatedLocation.toJSON()}
+          );
+          processedResults.push(processedOrderObj);
+        }
+
+        response.data = processedResults;
+        response.httpCode = queryResults.length ? 200 : 404;
+        response.success = queryResults.length > 0;
+        return res.status(response.httpCode).json(response);
+
+      } catch (e) {
+        response.error = e.toString();
+        response.httpCode = 500;
+        return res.status(response.httpCode).json(response);
+      }
+      
+
+    }]
   }
 
   createResource(middleware = []) {
@@ -107,7 +194,11 @@ class OrderRouter extends BaseRouter {
       .get(this.getOrdersForCurrentUser());
 
     this.router.route(`${this.basePath}`)
+      .get(this.getResources(standardMiddlewares))
       .post(this.createResource(standardMiddlewares));
+
+    this.router.route(`${this.basePath}/:id`)
+      .put(this.updateResource(standardMiddlewares));
 
     return this.router;
   }

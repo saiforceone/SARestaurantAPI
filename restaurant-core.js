@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors());
 morgan.token('type', function (req, res) { return req.headers['content-type'] });
 morgan.token('headers', function (req, res) { return req.headers['authorization'] });
-app.use(morgan(':headers'));
+app.use(morgan('combined'));
 app.use(passport.initialize());
 import './auth/auth.mjs';
 

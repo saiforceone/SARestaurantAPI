@@ -61,6 +61,9 @@ class BaseController {
           modelData[k] = data[k];
         }
       });
+      
+      delete modelData._id;
+      delete modelData.__v;
 
       if (id) modelData['_id'] = id;
 
