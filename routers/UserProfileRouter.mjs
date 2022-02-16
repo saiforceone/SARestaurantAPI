@@ -105,10 +105,24 @@ class UserProfileRouter extends BaseRouter {
     }];
   }
 
+  currentUserAsAdmin() {
+    return [checkJWT, checkAdmin, async(req, res) => {
+      const response = this.constructResponse();
+      response.data = req.user;
+      console.log('current user as admin userObj: ', req.user);
+      response.httpCode = 200;
+      response.success = true;
+      return res.status(response.httpCode).json(response);
+    }];
+  }
+
   getRoutes() {
 
     this.router.route(`${this.basePath}/me`)
       .get(this.currentUser());
+
+    this.router.route(`${this.basePath}/adm-check`)
+      .get(this.currentUserAsAdmin());
 
     this.router.route(`${this.basePath}`)
       .get(this.getResources(standardMiddlewares));
