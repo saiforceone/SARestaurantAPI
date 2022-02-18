@@ -9,7 +9,7 @@ import Image from './Helpers/Image.mjs';
 const RestaurantLocationSchema = new Schema({
     locationName: {required: true, minlength: 5, trim: true, type: String},
     address: {
-        address1: {minlength: 5, trim: true, type: String, default: ''},
+        address1: {trim: true, type: String, default: ''},
         address2: {trim: true, type: String, default: ''},
         geo: {
             maxlength: 2,

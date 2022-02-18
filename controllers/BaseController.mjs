@@ -113,13 +113,13 @@ class BaseController {
    * @param {Number} page 
    * @param {Number} limit 
    * @param {Boolean} ignorePagination 
-   * @param {[String]} sortOptions 
+   * @param {String} sortOptions 
    * @returns [Objects]
    * @description gets a list of resources that match the given query
    */
-  async getItems(queryObject = {}, page = 0, limit = 10, ignorePagination = false, sortOptions = []) {
+  async getItems(queryObject = {}, page = 0, limit = 10, ignorePagination = false, sortOptions = '') {
     try {
-      return ignorePagination ? await this.model.find(queryObject) : await this.model.find(queryObject).sort(sortOptions).skip(page * limit);
+      return ignorePagination ? await this.model.find(queryObject).sort(sortOptions) : await this.model.find(queryObject).sort(sortOptions).skip(page * limit);
     } catch (e) {
       console.log(`getItems error: ${e.toString()}`);
       return [];

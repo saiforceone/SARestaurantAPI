@@ -58,13 +58,46 @@ class OrderRouter extends BaseRouter {
       try {
         const orders = await this.controller.getItems({
           relatedUser: mongoose.Types.ObjectId(req.user._id),
-          ignorePagination: true,
-        });
+        }, 0, 10, true, '-orderDate');
 
         console.log('orders?: ', orders);
+        // TODO: This should really be refactored
+        let processedResults = [];
+        for (const result of orders) {
+          // Related Users
+          let relatedUser = this.cachedUsers[result.relatedUser];
+          if (!relatedUser) {
+            const fetchedUser = await getUserById({
+              userId: mongoose.Types.ObjectId(result.relatedUser)
+            });
+            if (fetchedUser) {
+              this.cachedUsers[String(fetchedUser._id)] = fetchedUser;
+              relatedUser = fetchedUser;
+            }
+          }
+
+          // Related Locations
+          let relatedLocation = this.cachedLocations[result.relatedLocation];
+          if (!relatedLocation) {
+            const fetchedLocation = await getLocationById({
+              locationId: mongoose.Types.ObjectId(result.relatedLocation)
+            });
+            if (fetchedLocation) {
+              this.cachedLocations[String(fetchedLocation._id)] = fetchedLocation;
+              relatedLocation = fetchedLocation;
+            }
+          }
+          
+          const processedOrderObj = Object.assign(
+            {}, result.toJSON(),
+            {relatedUser: relatedUser.toJSON()},
+            {relatedLocation: relatedLocation.toJSON()}
+          );
+          processedResults.push(processedOrderObj);
+        }
 
         response.httpCode = 200;
-        response.data = orders;
+        response.data = processedResults;
         response.success = true;
         return res.json(response);
       } catch (e) {
@@ -81,7 +114,7 @@ class OrderRouter extends BaseRouter {
 
       try {
         let query = req.query.filter ? String(req.query.filter).trim() : {};
-        const queryResults = await this.controller.getItems(query);
+        const queryResults = await this.controller.getItems(query, 0, 10, true, '-orderDate');
 
         let processedResults = [];
         for (const result of queryResults) {
